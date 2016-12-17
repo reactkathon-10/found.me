@@ -5,7 +5,6 @@ import Communications from 'react-native-communications';
 
 import {
     View,
-    Text,
     Navigator
 } from 'react-native';
 
@@ -14,11 +13,23 @@ import {
     Content ,
     Button,
     Icon,
-    Header
+    ListItem,
+    Header,
+    CheckBox,
+    Text
 } from 'native-base';
 
 
 export default class UserInfo extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            location: null,
+            user: {}
+        };
+        this.getUserInfo();
+    }
+
     phone = '+841227651851';
 
     sendSms() {
@@ -36,34 +47,98 @@ export default class UserInfo extends Component {
     pushNotification() {
         Communications.web('https://github.com/facebook/react-native');
     }
+
+    getUserInfo() {
+        fetch('http://192.168.3.157:8080/users/code')
+            .then((response) => response.json())
+            .then((res) => {
+                if (res.status === "success") {
+                    this.setState({
+                        user: res.data
+                    })
+                } else {
+                    alert(res.message);
+                }
+            });
+    }
+
+    includeLocation(bool) {
+        if (!bool) {
+            this.setState({
+                location: null
+            });
+        } else {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    this.setState({
+                        location: {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        }
+                    });
+                },
+                (error) => {
+                    alert(error.message);
+                    this.setState({
+                        location: null
+                    })
+                },
+                {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+            );
+        }
+    }
+
+    buildContent() {
+        if (!this.state.user) {
+            return (
+                <Content/>
+            )
+        }
+
+        return (
+            <Content>
+                <ListItem>
+                    <Text>{this.state.user.phone}</Text>
+                </ListItem>
+                <ListItem>
+                    <Text>{this.state.user.email}</Text>
+                </ListItem>
+                <ListItem>
+                    <CheckBox checked={!!this.state.location}
+                              onPress={this.includeLocation.bind(this)} />
+                    <Text>Include my location</Text>
+                </ListItem>
+                <Button block success style={AppStyles.Button}
+                        onPress={this.sendSms.bind(this)}>
+                    <Icon name='ios-text' />
+                    Send SMS
+                </Button>
+                <Button block success style={AppStyles.Button}
+                        onPress={this.phoneCall.bind(this)}>
+                    <Icon name='ios-call' />
+                    Make a Phone Call
+                </Button>
+                <Button block success style={AppStyles.Button}
+                        onPress={this.sendEmail.bind(this)}>
+                    <Icon name='ios-mail' />
+                    Send Email
+                </Button>
+                <Button block success style={AppStyles.Button}
+                        onPress={this.pushNotification.bind(this)}>
+                    <Icon name="ios-notifications" />
+                    Push Notification
+                </Button>
+            </Content>
+        )
+    }
+
     render() {
         return (
             <Container style={AppStyles.Container}>
                 <Header>
-                    <NavigationBar title='User Info'/>
+                    <NavigationBar title={this.state.user.full_name}/>
                 </Header>
-                <Content>
-                    <Button block success style={AppStyles.Button}
-                            onPress={this.sendSms.bind(this)}>
-                        <Icon name='ios-text' />
-                        Send SMS
-                    </Button>
-                    <Button block success style={AppStyles.Button}
-                            onPress={this.phoneCall.bind(this)}>
-                        <Icon name='ios-call' />
-                        Make a Phone Call
-                    </Button>
-                    <Button block success style={AppStyles.Button}
-                            onPress={this.sendEmail.bind(this)}>
-                        <Icon name='ios-mail' />
-                        Send Email
-                    </Button>
-                    <Button block success style={AppStyles.Button}
-                            onPress={this.pushNotification.bind(this)}>
-                        <Icon name="ios-push" />
-                        Push Notification
-                    </Button>
-                </Content>
+                {this.buildContent()}
             </Container>
         );
     }
