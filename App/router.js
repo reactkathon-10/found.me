@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 import Home from './home';
+import UserInfo from './userInfo';
 import {
     Navigator,
 } from 'react-native';
@@ -13,14 +14,16 @@ export default class Router extends Component {
     renderScene(route, navigator) {
         switch (route.id) {
             case 'home':
-                return <Home navigator={navigator} />
+                return <Home navigator={navigator} />;
+            case 'userInfo':
+                return <UserInfo/>;
         }
     }
 
     render() {
         return (
             <Navigator
-                initialRoute={{id: 'home'}}
+                initialRoute={{id: 'userInfo'}}
                 renderScene={this.renderScene.bind(this)}
             />
     );
