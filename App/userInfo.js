@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {AppStyles} from './style';
-import NavigationBar from './navigationBar';
 import Communications from 'react-native-communications';
 
 import {
@@ -14,7 +13,6 @@ import {
     Button,
     Icon,
     ListItem,
-    Header,
     CheckBox,
     Text
 } from 'native-base';
@@ -27,7 +25,7 @@ export default class UserInfo extends Component {
             location: null,
             user: {}
         };
-        this.getUserInfo();
+        // this.getUserInfo();
     }
 
     phone = '+841227651851';
@@ -135,9 +133,6 @@ export default class UserInfo extends Component {
     render() {
         return (
             <Container style={AppStyles.Container}>
-                <Header>
-                    <NavigationBar title={this.state.user.full_name}/>
-                </Header>
                 {this.buildContent()}
             </Container>
         );
