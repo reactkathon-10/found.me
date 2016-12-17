@@ -10,6 +10,7 @@ import {
     AsyncStorage,
     TouchableOpacity
 } from 'react-native';
+import QRCodeScreen from './components/QRCodeScreen';
 
 export default class Router extends Component {
     constructor(props) {
@@ -23,6 +24,8 @@ export default class Router extends Component {
         switch (route.id) {
             case 'home':
                 return <Home navigator={navigator} />;
+            case 'qrCodeScreen':
+                return <QRCodeScreen navigator={navigator} />
             case 'userInfo':
                 return <UserInfo navigator={navigator}/>;
             case 'login':
