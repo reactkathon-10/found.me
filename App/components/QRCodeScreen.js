@@ -70,23 +70,19 @@ var styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-
     rectangleContainer: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'transparent',
     },
-
     rectangle: {
-        height: 250,
-        width: 250,
+        height: 150,
+        width: 150,
         borderWidth: 2,
         borderColor: '#00FF00',
         backgroundColor: 'transparent',
     },
-
-
     cancelButton: {
         flexDirection: 'row',
         justifyContent: 'center',
