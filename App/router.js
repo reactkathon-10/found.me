@@ -4,6 +4,8 @@ import Home from './home';
 import {
     Navigator,
 } from 'react-native';
+import QRCodeScreen from './components/QRCodeScreen';
+import BadInstagramClone from './components/BadInstagramClone';
 
 export default class Router extends Component {
     constructor(props) {
@@ -13,7 +15,9 @@ export default class Router extends Component {
     renderScene(route, navigator) {
         switch (route.id) {
             case 'home':
-                return <Home navigator={navigator} />
+                return <Home navigator={navigator} />;
+            case 'QRCodeScreen':
+                return <QRCodeScreen navigator={navigator} />
         }
     }
 
