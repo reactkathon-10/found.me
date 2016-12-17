@@ -1,30 +1,37 @@
 import React, {Component} from 'react';
 import {AppStyles} from './style';
-import NavigationBar from './navigationBar';
 
 import {
     View,
-    Text,
-    Navigator
+    Navigator,
+    StyleSheet,
 } from 'react-native';
 
 import {
     Container,
-    Content ,
-    Header
 } from 'native-base';
-
+import QRCodeScreen from './components/QRCodeScreen';
 
 export default class Home extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    onSuccess(result) {
+        this.props.navigator.push({
+            id: 'userInfo',
+            passProps: {
+                userId: result,
+            }
+        });
+    }
+
     render() {
         return (
             <Container style={AppStyles.Container}>
-                <Header>
-                    <NavigationBar title='Home'/>
-                </Header>
-                <Content>
-
-                </Content>
+                <View>
+                    <QRCodeScreen navigator={this.props.navigator} onSuccess={this.onSuccess.bind(this)}/>
+                </View>
             </Container>
         );
     }
