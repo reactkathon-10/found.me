@@ -35,7 +35,7 @@ class QRCodeScreen extends Component {
 
             setTimeout(() => {
                 $this.props.navigator.pop();
-                $this.props.onSucess(result.data);
+                $this.props.onSuccess(result.data);
             }, 30);
         }
     }

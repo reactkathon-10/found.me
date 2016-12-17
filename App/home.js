@@ -3,39 +3,21 @@ import {AppStyles} from './style';
 
 import {
     View,
-    Text,
     Navigator,
     StyleSheet,
-    TouchableOpacity,
-    AlertIOS
 } from 'react-native';
 
 import {
     Container,
-    Content ,
 } from 'native-base';
 import QRCodeScreen from './components/QRCodeScreen';
 
 export default class Home extends Component {
     constructor(props) {
         super(props);
-
-        this.onPressQRCode = this.onPressQRCode.bind(this);
-        this.onSucess = this.onSucess.bind(this);
     }
 
-    onPressQRCode() {
-        this.props.navigator.push({
-            id: 'qrCodeScreen',
-            component: QRCodeScreen,
-            title: 'QRCode',
-            passProps: {
-                onSucess: this.onSucess,
-            }
-        });
-    }
-
-    onSucess(result) {
+    onSuccess(result) {
         this.props.navigator.push({
             id: 'userInfo',
             passProps: {
@@ -47,21 +29,10 @@ export default class Home extends Component {
     render() {
         return (
             <Container style={AppStyles.Container}>
-                <Content>
-                    <TouchableOpacity onPress={this.onPressQRCode}>
-                        <Text>Read QRCode</Text>
-                    </TouchableOpacity>
-                </Content>
+                <View>
+                    <QRCodeScreen navigator={this.props.navigator} onSuccess={this.onSuccess.bind(this)}/>
+                </View>
             </Container>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "transparent",
-    }
-});

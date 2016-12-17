@@ -25,7 +25,8 @@ export default class UserInfo extends Component {
             location: null,
             user: {}
         };
-        // this.getUserInfo();
+        console.log(props);
+        this.getUserInfo();
     }
 
     phone = '+841227651851';
@@ -47,7 +48,7 @@ export default class UserInfo extends Component {
     }
 
     getUserInfo() {
-        fetch('http://192.168.3.157:8080/users/code')
+        fetch('http://192.168.3.157:8080/users/' + this.props.userId)
             .then((response) => response.json())
             .then((res) => {
                 if (res.status === "success") {

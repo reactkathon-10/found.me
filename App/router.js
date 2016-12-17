@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 
+import {AppStyles} from './style';
 import Login from './auth/login';
 import Register from './auth/register';
 import Home from './home';
@@ -18,20 +19,33 @@ export default class Router extends Component {
         this.state = {
             login_token: null
         };
+
+        this.routes = {
+            home: {
+                title: 'Home'
+            },
+            login: {
+                title: 'Login'
+            },
+            register: {
+                title: 'Register'
+            }
+        };
     }
 
     renderScene(route, navigator) {
+        Object.assign(route, this.routes[route.id]);
         switch (route.id) {
             case 'home':
-                return <Home navigator={navigator} />;
+                return <Home navigator={navigator} {...route.passProps} />;
             case 'qrCodeScreen':
-                return <QRCodeScreen navigator={navigator} />
+                return <QRCodeScreen navigator={navigator} {...route.passProps}/>
             case 'userInfo':
-                return <UserInfo navigator={navigator}/>;
+                return <UserInfo navigator={navigator} {...route.passProps}/>;
             case 'login':
-                return <Login navigator={navigator} />;
+                return <Login navigator={navigator} {...route.passProps} />;
             case 'register':
-                return <Register navigator={navigator} />;
+                return <Register navigator={navigator} {...route.passProps} />;
         }
     }
 
@@ -83,7 +97,7 @@ export default class Router extends Component {
     render() {
         return (
             <Navigator
-                initialRoute={{id: 'userInfo'}}
+                initialRoute={{id: 'home'}}
                 renderScene={this.renderScene.bind(this)}
                 navigationBar={
                     <Navigator.NavigationBar
@@ -92,6 +106,7 @@ export default class Router extends Component {
                             RightButton: this.rightButton.bind(this),
                             Title: this.title.bind(this)
                         }}
+                        style={AppStyles.NavigationBar}
                     />
                 }
             />
