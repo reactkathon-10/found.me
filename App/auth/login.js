@@ -51,6 +51,7 @@ export default class Login extends Component {
             Alert.alert(res.name, res.message);
         } else {
             AsyncStorage.setItem('login_token', res.token);
+            this.props.navigator.pop();
         }
     }
 

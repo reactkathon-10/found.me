@@ -33,8 +33,8 @@ export default class Register extends Component {
         if (res.errors) {
             Alert.alert(res.message, res.errors[0].message);
         } else {
-            alert(JSON.stringify(res));
-            AsyncStorage.setItem('login_token', res.token);
+            Alert.alert('Register successfully');
+            this.goToLogin();
         }
     }
 
@@ -113,7 +113,7 @@ export default class Register extends Component {
                     </InputGroup>
                     <AjaxButton
                         style={AppStyles.Button}
-                        url={Settings.backendServer + '/signup'}
+                        url={Settings.backendServer + '/users'}
                         data={this.getFormData()}
                         method='POST'
                         title='Register'

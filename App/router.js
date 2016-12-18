@@ -10,7 +10,8 @@ import {
     Text,
     AsyncStorage,
     TouchableOpacity,
-    Alert
+    Alert,
+    View
 } from 'react-native';
 import {
     Icon
@@ -54,7 +55,9 @@ export default class Router extends Component {
     }
 
     componentWillMount() {
-        this.getAuthenticationInfo();
+        setInterval(() => {
+            this.getAuthenticationInfo();
+        }, 1000);
     }
 
     getAuthenticationInfo() {
