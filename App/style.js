@@ -10,10 +10,7 @@ export const AppStyles = StyleSheet.create({
         flexDirection: 'column',
     },
     Content: {
-        flex:1,
-        flexDirection:'row',
-        alignItems:'center',
-        justifyContent:'center'
+        marginTop: 60
     },
     InputIcon: {
         color: '#00C497',
@@ -33,6 +30,21 @@ export const AppStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'red', // changing navbar color
+        backgroundColor: '#65a8c3',
+    },
+    NavBarText: {
+        color: 'white',
+        fontSize: 25,
+        marginTop: 10
+    },
+    NavBarIconLeft: {
+        color: 'white',
+        marginLeft: 10,
+        marginTop: 15
+    },
+    NavBarIconRight: {
+        color: 'white',
+        marginRight: 10,
+        marginTop: 15
     }
 });

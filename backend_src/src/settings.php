@@ -20,7 +20,7 @@ return [
             "host" => "localhost",
             "dbname" => "flyteam",
             "user" => "root",
-            "pass" => ""
+            "pass" => "password"
         ],
     ],
 ];

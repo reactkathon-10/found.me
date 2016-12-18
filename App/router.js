@@ -9,8 +9,12 @@ import {
     Navigator,
     Text,
     AsyncStorage,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
+import {
+    Icon
+} from 'native-base';
 import QRCodeScreen from './components/QRCodeScreen';
 
 export default class Router extends Component {
@@ -49,8 +53,13 @@ export default class Router extends Component {
         }
     }
 
+    componentWillMount() {
+        this.getAuthenticationInfo();
+    }
+
     getAuthenticationInfo() {
         AsyncStorage.getItem('login_token', (err, res) => {
+            console.log('getAuthenticationInfo', err, res);
             if (!err) {
                 this.setState({
                     login_token: res
@@ -63,7 +72,7 @@ export default class Router extends Component {
         if (navigator.getCurrentRoutes().length > 1) {
             return (
                 <TouchableOpacity onPress={() => navigator.pop()}>
-                    <Text>Back</Text>
+                    <Icon style={AppStyles.NavBarIconLeft} name="ios-arrow-back" />
                 </TouchableOpacity>
             )
         }
@@ -77,20 +86,43 @@ export default class Router extends Component {
         return !!this.state.login_token;
     }
 
+    handleLogout() {
+        Alert.alert('Confirmation', 'Do you want to log out?', [
+            {
+                text: 'Cancel',
+            },
+            {
+                text: 'Yes',
+                onPress: () => {
+                    AsyncStorage.removeItem('login_token');
+                }
+            }
+        ]);
+    }
+
     rightButton(route, navigator, index, navState) {
-        if (!this.isLoggedIn() && !this.isAuthenticating(route)) {
-            return (
-                <TouchableOpacity onPress={() => navigator.push({id: 'login', title: 'Login'})}>
-                    <Text>Login</Text>
-                </TouchableOpacity>
-            );
+        if (!this.isAuthenticating(route)) {
+            if (!this.isLoggedIn()) {
+                return (
+                    <TouchableOpacity onPress={() => navigator.push({id: 'login', title: 'Login'})}>
+                        <Icon style={AppStyles.NavBarIconRight} name="ios-log-in" />
+                    </TouchableOpacity>
+                );
+            } else {
+                return (
+                    <TouchableOpacity onPress={this.handleLogout.bind(this)}>
+                        <Icon style={AppStyles.NavBarIconRight} name="ios-log-out" />
+                    </TouchableOpacity>
+                );
+            }
         }
+
 
     }
 
     title(route, navigator, index, navState) {
         return (
-            <Text>{route.title}</Text>
+            <Text style={AppStyles.NavBarText}>{route.title}</Text>
         );
     }
 

@@ -4,7 +4,8 @@ import Communications from 'react-native-communications';
 
 import {
     View,
-    Navigator
+    Navigator,
+    Alert
 } from 'react-native';
 
 import {
@@ -25,40 +26,30 @@ export default class UserInfo extends Component {
             location: null,
             user: {}
         };
-        console.log(props);
-        this.getUserInfo();
     }
 
-    phone = '+841227651851';
-
     sendSms() {
-        Communications.text(this.phone, 'test body');
+        Communications.text(this.props.user.phone, this.getSmsContent());
+    }
+
+    getSmsContent() {
+        return '';
     }
 
     phoneCall() {
-        Communications.phonecall(this.phone, true);
+        Communications.phonecall(this.props.user.phone, true);
     }
 
     sendEmail() {
-        Communications.email(['trunglett@gmail.com'], null, null, 'you lost something', 'my body text');
+        Communications.email([this.props.user.email], null, null, this.getEmailTitle(), this.getEmailBody());
     }
 
-    pushNotification() {
-        Communications.web('https://github.com/facebook/react-native');
+    getEmailTitle() {
+        return '';
     }
 
-    getUserInfo() {
-        fetch('http://192.168.3.157:8080/users/' + this.props.userId)
-            .then((response) => response.json())
-            .then((res) => {
-                if (res.status === "success") {
-                    this.setState({
-                        user: res.data
-                    })
-                } else {
-                    alert(res.message);
-                }
-            });
+    getEmailBody() {
+        return '';
     }
 
     includeLocation(bool) {
@@ -77,7 +68,7 @@ export default class UserInfo extends Component {
                     });
                 },
                 (error) => {
-                    alert(error.message);
+                    Alert.alert('Error', error.message);
                     this.setState({
                         location: null
                     })
@@ -95,12 +86,12 @@ export default class UserInfo extends Component {
         }
 
         return (
-            <Content>
+            <Content style={AppStyles.Content}>
                 <ListItem>
-                    <Text>{this.state.user.phone}</Text>
+                    <Text>{this.props.user.phone}</Text>
                 </ListItem>
                 <ListItem>
-                    <Text>{this.state.user.email}</Text>
+                    <Text>{this.props.user.email}</Text>
                 </ListItem>
                 <ListItem>
                     <CheckBox checked={!!this.state.location}
@@ -121,11 +112,6 @@ export default class UserInfo extends Component {
                         onPress={this.sendEmail.bind(this)}>
                     <Icon name='ios-mail' />
                     Send Email
-                </Button>
-                <Button block success style={AppStyles.Button}
-                        onPress={this.pushNotification.bind(this)}>
-                    <Icon name="ios-notifications" />
-                    Push Notification
                 </Button>
             </Content>
         )

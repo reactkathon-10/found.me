@@ -7,14 +7,19 @@
 
 import React, {Component} from 'react';
 import {AppStyles} from '../style';
-import { Container, InputGroup, Input, Icon, Button } from 'native-base';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { Container, InputGroup, Input, Icon } from 'native-base';
+import { View, TouchableOpacity, Text, AsyncStorage, Alert } from 'react-native';
+import {Settings} from './../settings';
+import AjaxButton from './../components/ajaxButton';
 
 export default class Login extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            submitDisabled: true,
+            email: '',
+            password: ''
         };
     }
 
@@ -22,11 +27,31 @@ export default class Login extends Component {
         this.props.navigator.replace({id: 'register'});
     }
 
-    loginCallback() {
-
+    getFormData() {
+        return {
+            email: this.state.email,
+            password: this.state.password,
+        }
     }
 
-    doLogin() {
+    getValidation() {
+        return {
+            email: {
+                require: 'Email is required',
+                email: 'Email is not valid'
+            },
+            password: {
+                require: 'Password is required'
+            },
+        }
+    }
+
+    loginCallback(res) {
+        if (res.errors) {
+            Alert.alert(res.name, res.message);
+        } else {
+            AsyncStorage.setItem('login_token', res.token);
+        }
     }
 
     render() {
@@ -34,12 +59,13 @@ export default class Login extends Component {
             <Container style={AppStyles.Container}>
                 <View>
                     <InputGroup style={AppStyles.InputGroup}>
-                        <Icon name='ios-person' style={AppStyles.InputIcon}/>
-                        <Input placeholder='Name'
-                               onChangeText={(username) => this.setState({username})}
+                        <Icon name='ios-mail' style={AppStyles.InputIcon}/>
+                        <Input placeholder='Email'
+                               onChangeText={(email) => this.setState({email})}
                                autoCapitalize="none"
                                autoCorrect={false}
-                               value={this.state.username}/>
+                               keyboardType="email-address"
+                               value={this.state.email}/>
                     </InputGroup>
                     <InputGroup style={AppStyles.InputGroup}>
                         <Icon name='ios-lock' style={AppStyles.InputIcon}/>
@@ -48,9 +74,19 @@ export default class Login extends Component {
                                value={this.state.password}
                                secureTextEntry={true}/>
                     </InputGroup>
-                    <Button block success
+                    <AjaxButton
                             style={AppStyles.Button}
-                            onPress={this.doLogin.bind(this)}> Login </Button>
+                            url={Settings.backendServer + '/auth/local'}
+                            data={this.getFormData()}
+                            method='POST'
+                            title='Login'
+                            validation={this.getValidation()}
+                            onSuccess={this.loginCallback.bind(this)}
+                            onError={(error) => {
+                                console.log(error);
+                                Alert.alert('Error', 'Something went wrong!');
+                            }}>
+                    </AjaxButton>
                     <TouchableOpacity style={{marginTop: 20}} onPress={this.goToRegister.bind(this)}>
                         <Text style={{textAlign: 'center'}}>Doesn't have account? Register now!</Text>
                     </TouchableOpacity>
